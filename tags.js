@@ -137,6 +137,7 @@ class InfoTag extends Tag {
       depth: "0.5",
       height: "0.5",
       width: "0.5",
+      "data-tag-id": this.id,
       color: "#EF2D5E"
     });
 
@@ -160,7 +161,9 @@ class InfoTag extends Tag {
     backgroundPlane.setAttribute("height", "3"); // Hauteur agrandie
     backgroundPlane.setAttribute("color", "#000000");
     backgroundPlane.setAttribute("material", "opacity: 0.8; transparent: true");
-    backgroundPlane.setAttribute("position", "2.5 -1.5 0.05"); // Alignement ajusté avec la sphère
+    backgroundPlane.setAttribute("position", "2.5 -1.5 0.05"); 
+    backgroundPlane.setAttribute("data-tag-id", this.id);// Alignement ajusté avec la sphère
+    backgroundPlane.setAttribute("look-at-camera", "");// 
     infoBox.appendChild(backgroundPlane);
 
     // Ajouter le titre avec une position ajustée et un texte plus grand
@@ -172,6 +175,8 @@ class InfoTag extends Tag {
     titleText.setAttribute("align", "center");
     titleText.setAttribute("color", "#EF2D5E");
     titleText.setAttribute("font", "https://cdn.aframe.io/fonts/mozillavr.fnt");
+    titleText.setAttribute("data-tag-id", this.id);
+    titleText.setAttribute("look-at-camera", "");
     infoBox.appendChild(titleText);
 
     // Ajouter la description stylisée avec une position ajustée et un texte plus grand
@@ -182,6 +187,8 @@ class InfoTag extends Tag {
     descriptionText.setAttribute("width", "2.4"); // Largeur augmentée pour le texte
     descriptionText.setAttribute("align", "center");
     descriptionText.setAttribute("color", "#FFFFFF");
+    descriptionText.setAttribute("data-tag-id", this.id);
+    descriptionText.setAttribute("look-at-camera", "");
     infoBox.appendChild(descriptionText);
 
     reductionBox.setAttribute("resize-on-click", {

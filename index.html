@@ -1,332 +1,288 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="./dist/output.css" rel="stylesheet" />
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script type="module" src="main.js" defer></script>
-    <script src="components/follow-camera.js" defer></script>
-    <script src="components/reduction-info.js" defer></script>
-    <script src="components/dragndrop.js" defer></script>
-    <script src="components/follow-info.js" defer></script>
-    <script src="components/follow-mover.js" defer></script>
-    <script src="components/look-at-camera.js" defer></script>
-    <title>SAE501VR</title>
-  </head>
-  <body class="flex h-screen">
-    <div
-      id="menu"
-      class="flex flex-col m-8 items-center gap-4 w-[22rem] bg-gray-100 p-8 shadow-lg z-10 rounded-xl overflow-hidden absolute top-0 bottom-0 left-0"
-    >
-      <p class="text-xl font-bold">Scènes</p>
 
-      <input type="file" id="fileInput" class="hidden" accept="image/*" />
-      <div class="flex flex-row gap-4 w-full">
-        <select id="sceneDropdown" class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0">
-          <option value="">Sélectionnez une scène</option>
-        </select>
-        <button id="deleteSceneBtn" disabled>
-          <img src="./asset/trash.svg" alt="Delete Scene">
-        </button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="./dist/output.css" rel="stylesheet" />
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script type="module" src="main.js" defer></script>
+  <script src="components/follow-camera.js" defer></script>
+  <script src="components/reduction-info.js" defer></script>
+  <script src="components/dragndrop.js" defer></script>
+  <script src="components/follow-info.js" defer></script>
+  <script src="components/follow-mover.js" defer></script>
+  <script src="components/look-at-camera.js" defer></script>
+  <title>SAE501VR</title>
+</head>
+
+<body class="flex h-screen">
+  <div id="menu"
+    class="flex flex-col m-8 items-center gap-4 w-[22rem] bg-gray-100 p-8 shadow-lg z-10 rounded-xl overflow-hidden absolute top-0 bottom-0 left-0">
+    <p class="text-xl font-bold">Scènes</p>
+
+    <input type="file" id="fileInput" class="hidden" accept="image/*" />
+    <div class="flex flex-row gap-4 w-full">
+      <select id="sceneDropdown" class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0">
+        <option value="">Sélectionnez une scène</option>
+      </select>
+      <button id="deleteSceneBtn" disabled>
+        <img src="./asset/trash.svg" alt="Delete Scene">
+      </button>
+    </div>
+
+    <div id="editSceneForm" class="flex flex-col gap-4 w-full rounded hidden">
+      <div class="flex flex-col gap-1 mb-4">
+        <p class="font-semibold">Changer le nom de la scène</p>
+        <input type="text" id="sceneNameInput" class="w-full py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
+          placeholder="Scène 1" />
       </div>
-
-      <div id="editSceneForm" class="flex flex-col gap-4 w-full rounded hidden">
-        <div class="flex flex-col gap-1 mb-4">
-          <p class="font-semibold">Changer le nom de la scène</p>
-          <input
-            type="text"
-            id="sceneNameInput"
-            class="w-full py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-            placeholder="Scène 1"
-          />
-        </div>
-        <div class="flex flex-row gap-3">
-          <input
-            type="file"
-            id="editFileInput"
-            class="hidden"
-            accept="image/*"
-          />
-          <button
-            id="customFileInputBtn"
-            class="w-1/2  font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-          >
-            Changer l'image 360°
-          </button>
-          <button
-          id="saveSceneBtn"
-          class="w-1/2  font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-        >
+      <div class="flex flex-row gap-3">
+        <input type="file" id="editFileInput" class="hidden" accept="image/*" />
+        <button id="customFileInputBtn"
+          class="w-1/2  font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
+          Changer l'image 360°
+        </button>
+        <button id="saveSceneBtn"
+          class="w-1/2  font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
           Enregistrer modifications
         </button>
-        </div>
       </div>
-      <div class="w-full flex flex-row gap-3">
-        <button
-          id="createSceneBtn"
-          class="w-1/2 font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white"
-        >
-          Créer une scène
-        </button>
-        <input type="file" id="uploadJsonInput" class="hidden" accept=".json" />
-        <button
-        id="uploadJsonBtn"
-        class="w-1/2 font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white"
-      >
+    </div>
+    <div class="w-full flex flex-row gap-3">
+      <button id="createSceneBtn"
+        class="w-1/2 font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white">
+        Créer une scène
+      </button>
+      <input type="file" id="uploadJsonInput" class="hidden" accept=".json" />
+      <button id="uploadJsonBtn"
+        class="w-1/2 font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white">
         Charger l'expérience
       </button>
-      </div>
-      <div id="exportSaveBtn" class="w-full flex flex-row gap-3 hidden">
-      <button
-        id="saveExperienceBtn"
-        class="w-full font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white"
-      >
+    </div>
+    <div id="exportSaveBtn" class="w-full flex flex-row gap-3 hidden">
+      <button id="saveExperienceBtn"
+        class="w-full font-semibold px-4 text-black py-2 rounded bg-white border-2 duration-500 border-black hover:bg-black hover:border-transparent hover:duration-500 hover:bg-grayborder-gray-800 hover:text-white">
         Sauvegarder l'expérience
       </button>
-      </div>
-      <div id="subMenuCreateTag" class="w-full flex flex-col gap-4 items-start hidden">
+      <button onclick="saveAllAFRAMEElements()">Exporter en JSON</button>
+    </div>
+    <div id="subMenuCreateTag" class="w-full flex flex-col gap-4 items-start hidden">
       <p class="text-xl font-bold mt-8">Créer un Tag</p>
       <div class="w-full flex flex-row gap-4 justify-between">
-        <button
-          id="OpenTagMenuText"
-          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white"
-        >
+        <button id="OpenTagMenuText"
+          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white">
           <img src="./asset/text-icon.svg" height="24px" width="24px" />
         </button>
-        <button
-          id="OpenTagMenuDoor"
-          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white"
-        >
+        <button id="OpenTagMenuDoor"
+          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white">
           <img src="./asset/door-icon.svg" height="24px" width="24px" />
         </button>
-        <button
-          id="OpenTagMenuPhoto"
-          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white"
-        >
+        <button id="OpenTagMenuPhoto"
+          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white">
           <img src="./asset/photo-icon.svg" height="24px" width="24px" />
         </button>
-        <button
-          id="OpenTagMenuVideo"
-          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white"
-        >
+        <button id="OpenTagMenuVideo"
+          class="font-semibold px-4 py-4 rounded bg-black border-2 border-gray-800 duration-300 text-graborder-gray-800 hover:bg-gray-600 hover:border-transparent hover:duration-300 hover:bg-graborder-gray-800 hover:text-white">
           <img src="./asset/camera-icon.svg" height="24px" width="24px" />
         </button>
       </div>
     </div>
-    </div>
+  </div>
 
-    <div id="sceneContainer" class="flex-grow relative">
-      <a-scene id="defaultScene" class="w-full h-full">
-        <a-entity
-          camera
-          wasd-controls="enabled: false"
-          look-controls="enabled: true"
-        ></a-entity>
-        <a-sky src="./asset/attente.jpg"></a-sky>
-        <a-entity
-          id="leftHand"
-          laser-controls="hand: left"
-          super-hands
-        ></a-entity>
-        <a-entity
-          id="rightHand"
-          laser-controls="hand: right"
-          super-hands
-        ></a-entity>
-        <a-assets>
-          <img id="myImage" src="/asset/grab-icon.png" />
-        </a-assets>
-        <a-text
-          value="Cliquez sur 'Creer une scene' pour commencer"
-          position="0 2 -4"
-          align="center"
-          color="#Fff"
-          width="6"
-        ></a-text>
-      </a-scene>
-    </div>
+  <div id="sceneContainer" class="flex-grow relative">
+    <a-scene id="defaultScene" class="w-full h-full">
+      <a-entity camera wasd-controls="enabled: false" look-controls="enabled: true"></a-entity>
+      <a-sky src="./asset/attente.jpg"></a-sky>
+      <a-entity id="leftHand" laser-controls="hand: left" super-hands></a-entity>
+      <a-entity id="rightHand" laser-controls="hand: right" super-hands></a-entity>
+      <a-assets>
+        <img id="myImage" src="/asset/grab-icon.png" />
+      </a-assets>
+      <a-text value="Cliquez sur 'Creer une scene' pour commencer" position="0 2 -4" align="center" color="#Fff"
+        width="6"></a-text>
+    </a-scene>
+  </div>
 
-    <div
-      id="menuRight"
-      class="flex flex-col items-center gap-4 w-[22rem] bg-gray-100 p-8 m-8 shadow-lg z-10 rounded-xl overflow-hidden absolute top-0 bottom-0 right-0 hidden"
-    >
-      <p id="error"></p>
-      <div id="textTagFormContainer" class="w-full hidden">
-        <h2 class="text-lg font-bold pb-8">Créer un tag Texte</h2>
-        <form id="tagForm" class="flex flex-col">
-          <label class="font-semibold" for="tagTitle">Titre (Max 18)</label>
-          <input
-            type="text"
-            id="tagTitle"
-            name="tagTitle"
-            class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-            maxlength="18"
-          />
-          <label class="font-semibold mt-4" for="tagDescription"
-            >Description (Max 300)</label
-          >
-          <input
-            type="text"
-            id="tagDescription"
-            name="tagDescription"
-            class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-            maxlength="290"
-          />
-          <div class="flex items-center gap-3 mt-4" id="info-toggle">
-            <label class="font-semibold" for="tagRange">Profondeur</label>
-            <img  class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png" alt="information" href="">
-          </div>
-        </form>
-        <button
-          id="createTagBtnText"
-          class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-        >
-          Créer Tag Info
-        </button>
-      </div> 
-      <div id="doorTagFormContainer" class="w-full hidden">
-        <h2 class="text-lg font-bold pb-8">Créer un tag Door</h2>
-        <form class="w-full flex flex-col">
-          <label class="font-semibold" for="doorTagTitle">Titre</label>
-          <input
-            type="text"
-            id="doorTagTitle"
-            name="doorTagTitle"
-            class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-          />
-
-          <label class="font-semibold mt-4" for="doorSceneSelect"
-            >Vers la scène :</label
-          >
-          <select
-            id="doorSceneSelect"
-            name="doorSceneSelect"
-            class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-          >
-            <option value="">Sélectionnez une scène</option>
-          </select>
-          <div class="flex items-center gap-3 mt-4" id="info-toggle-door">
-            <label class="font-semibold" for="tagRange">Profondeur</label>
-            <img  class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png" alt="information" href="">
-          </div>
-        </form>
-        <button
-          id="createDoorTagBtn"
-          class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-        >
-          Créer Tag Door
-        </button>
-        <div class="mt-4">
-          <label for="tagSelectorDoor" class="font-semibold"
-            >Tags de la scène :</label
-          >
-          <select
-            id="tagSelectorDoor"
-            class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-          >
-            <option value="" disabled selected>Sélectionnez un tag</option>
-          </select>
+  <div id="menuRight"
+    class="flex flex-col items-center gap-4 w-[22rem] bg-gray-100 p-8 m-8 shadow-lg z-10 rounded-xl overflow-hidden absolute top-0 bottom-0 right-0 hidden">
+    <p id="error"></p>
+    <div id="textTagFormContainer" class="w-full hidden">
+      <h2 class="text-lg font-bold pb-8">Créer un tag Texte</h2>
+      <form id="tagForm" class="flex flex-col">
+        <label class="font-semibold" for="tagTitle">Titre (Max 18)</label>
+        <input type="text" id="tagTitle" name="tagTitle"
+          class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0" maxlength="18" />
+        <label class="font-semibold mt-4" for="tagDescription">Description (Max 300)</label>
+        <input type="text" id="tagDescription" name="tagDescription"
+          class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0" maxlength="290" />
+        <div class="flex items-center gap-3 mt-4" id="info-toggle">
+          <label class="font-semibold" for="tagRange">Profondeur</label>
+          <img class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png"
+            alt="information" href="">
         </div>
-      </div>
-      <div id="photoTagFormContainer" class="w-full hidden">
-        <h2 class="text-lg font-bold pb-8">Créer un tag Photo</h2>
-        <form class="w-full flex flex-col">
-          <label class="font-semibold" for="photoTagTitle">Titre</label>
-          <input
-            type="text"
-            id="photoTagTitle"
-            name="photoTagTitle"
-            class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-          />
-          <label class="font-semibold mt-4" for="photoFileInput"
-            >Uploader une photo</label
-          >
-          <input
-            type="file"
-            id="photoFileInput"
-            name="photoFileInput"
-            class="w-full h-12 py-2 focus:outline-0"
-            accept="image/*"
-          />
-          <div class="flex items-center gap-3 mt-4" id="info-toggle-photo">
-            <label class="font-semibold" for="tagRange">Profondeur</label>
-            <img  class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png" alt="information" href="">
-          </div>
-        </form>
-        <button
-          id="createPhotoTagBtn"
-          class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-        >
-          Créer Tag Photo
-        </button>
-      </div>
-      <div id="videoTagFormContainer" class="w-full hidden">
-        <h2 class="text-lg font-bold pb-8">Créer un tag Video</h2>
-        <form class="w-full flex flex-col">
-          <label class="font-semibold" for="photoTagTitle">Titre</label>
-          <input
-            type="text"
-            id="videoTagTitle"
-            name="videoTagTitle"
-            class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0"
-          />
-          <label class="font-semibold mt-4" for="videoFileInput"
-            >Uploader une vidéo</label
-          >
-          <input
-            type="file"
-            id="videoFileInput"
-            name="videoFileInput"
-            class="w-full h-12 py-2 focus:outline-0"
-            accept="video/*"
-          />
-          <button
-            id="createVideoTagBtn"
-            class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black"
-          >
-            Créer Tag Vidéo
-          </button>
-        </form>
+      </form>
+      <button id="createTagBtnText"
+        class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
+        Créer Tag Info
+      </button>
+    </div>
+    <div id="doorTagFormContainer" class="w-full hidden">
+      <h2 class="text-lg font-bold pb-8">Créer un tag Door</h2>
+      <form class="w-full flex flex-col">
+        <label class="font-semibold" for="doorTagTitle">Titre</label>
+        <input type="text" id="doorTagTitle" name="doorTagTitle"
+          class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0" />
+
+        <label class="font-semibold mt-4" for="doorSceneSelect">Vers la scène :</label>
+        <select id="doorSceneSelect" name="doorSceneSelect"
+          class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0">
+          <option value="">Sélectionnez une scène</option>
+        </select>
+        <div class="flex items-center gap-3 mt-4" id="info-toggle-door">
+          <label class="font-semibold" for="tagRange">Profondeur</label>
+          <img class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png"
+            alt="information" href="">
+        </div>
+      </form>
+      <button id="createDoorTagBtn"
+        class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
+        Créer Tag Door
+      </button>
+      <div class="mt-4">
+        <label for="tagSelectorDoor" class="font-semibold">Tags de la scène :</label>
+        <select id="tagSelectorDoor" class="w-full h-12 py-2 border-b-2 border-black bg-gray-100 focus:outline-0">
+          <option value="" disabled selected>Sélectionnez un tag</option>
+        </select>
       </div>
     </div>
+    <div id="photoTagFormContainer" class="w-full hidden">
+      <h2 class="text-lg font-bold pb-8">Créer un tag Photo</h2>
+      <form class="w-full flex flex-col">
+        <label class="font-semibold" for="photoTagTitle">Titre</label>
+        <input type="text" id="photoTagTitle" name="photoTagTitle"
+          class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0" />
+        <label class="font-semibold mt-4" for="photoFileInput">Uploader une photo</label>
+        <input type="file" id="photoFileInput" name="photoFileInput" class="w-full h-12 py-2 focus:outline-0"
+          accept="image/*" />
+        <div class="flex items-center gap-3 mt-4" id="info-toggle-photo">
+          <label class="font-semibold" for="tagRange">Profondeur</label>
+          <img class="w-auto h-auto cursor-pointer information-icon" src="./asset/information-icon.png"
+            alt="information" href="">
+        </div>
+      </form>
+      <button id="createPhotoTagBtn"
+        class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
+        Créer Tag Photo
+      </button>
+    </div>
+    <div id="videoTagFormContainer" class="w-full hidden">
+      <h2 class="text-lg font-bold pb-8">Créer un tag Video</h2>
+      <form class="w-full flex flex-col">
+        <label class="font-semibold" for="photoTagTitle">Titre</label>
+        <input type="text" id="videoTagTitle" name="videoTagTitle"
+          class="w-full h-8 py-2 border-b-2 border-black bg-gray-100 focus:outline-0" />
+        <label class="font-semibold mt-4" for="videoFileInput">Uploader une vidéo</label>
+        <input type="file" id="videoFileInput" name="videoFileInput" class="w-full h-12 py-2 focus:outline-0"
+          accept="video/*" />
+        <button id="createVideoTagBtn"
+          class="mt-8 w-full font-semibold px-4 text-white py-2 rounded bg-black border-2 duration-500 border-transparent hover:bg-white hover:border-black hover:duration-500 hover:bg-grayborder-gray-800 hover:text-black">
+          Créer Tag Vidéo
+        </button>
+      </form>
+    </div>
+  </div>
 
-    <div
-      id="deleteModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
-    >
-      <div class="bg-white p-6 rounded shadow-lg">
-        <p class="text-lg font-semibold">
-          Êtes-vous sûr de vouloir supprimer cette scène ?
+  <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded shadow-lg">
+      <p class="text-lg font-semibold">
+        Êtes-vous sûr de vouloir supprimer cette scène ?
+      </p>
+      <div class="flex justify-end gap-4 mt-4">
+        <button id="cancelDeleteBtn"
+          class="font-semibold px-4 py-2 rounded bg-transparent border-2 border-gray-500 duration-300 text-gray-500 hover:border-transparent hover:duration-300 hover:bg-gray-500 hover:text-white">
+          Annuler
+        </button>
+        <button id="confirmDeleteBtn"
+          class="font-semibold px-4 py-2 rounded bg-transparent border-2 border-red-500 duration-300 text-red-500 hover:border-transparent hover:duration-300 hover:bg-red-500 hover:text-white">
+          Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="popup" class="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+      <button id="close-popup" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+        &times;
+      </button>
+      <div class="flex flex-col jusify-center items-center text-center">
+        <img class="mx-auto mb-4" src="./asset/scroll-icon.png" alt="scroll icon">
+        <p class="text-gray-700 font-lg">Pour ajuster la profondeur de votre élement, utilisez le scroll de la souris.
         </p>
-        <div class="flex justify-end gap-4 mt-4">
-          <button
-            id="cancelDeleteBtn"
-            class="font-semibold px-4 py-2 rounded bg-transparent border-2 border-gray-500 duration-300 text-gray-500 hover:border-transparent hover:duration-300 hover:bg-gray-500 hover:text-white"
-          >
-            Annuler
-          </button>
-          <button
-            id="confirmDeleteBtn"
-            class="font-semibold px-4 py-2 rounded bg-transparent border-2 border-red-500 duration-300 text-red-500 hover:border-transparent hover:duration-300 hover:bg-red-500 hover:text-white"
-          >
-            Supprimer
-          </button>
-        </div>
       </div>
     </div>
-    <div id="popup" class="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 hidden">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
-        <button id="close-popup" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
-          &times;
-        </button>
-        <div class="flex flex-col jusify-center items-center text-center">
-          <img class="mx-auto mb-4" src="./asset/scroll-icon.png" alt="scroll icon">
-          <p class="text-gray-700 font-lg">Pour ajuster la profondeur de votre élement, utilisez le scroll de la souris.</p>
-        </div>
-      </div>
-    </div> 
-  </body>
+  </div>
+
+  <script>
+    function saveAllAFRAMEElements() {
+      // Récupère toutes les scènes de la page
+      const allScenes = Array.from(document.querySelectorAll("a-scene"));
+      const scenesData = [];
+
+      // Parcourt chaque scène pour extraire ses éléments
+      allScenes.forEach(scene => {
+        const sceneId = scene.getAttribute("id") || "defaultScene";
+        const entities = [];
+
+        // Parcourt tous les éléments A-Frame dans la scène
+        scene.querySelectorAll("a-entity, a-image, a-sphere, a-sky, a-box, a-text, a-plane").forEach(entity => {
+          const entityData = {
+            tagName: entity.tagName,
+            attributes: {},
+          };
+
+          // Ajoute les attributs de chaque entité
+          Array.from(entity.attributes).forEach(attr => {
+            // Vérifie si l'attribut est un objet JSON
+            try {
+              // Si l'attribut est complexe, on essaie de le parse
+              const value = JSON.parse(attr.value);
+              entityData.attributes[attr.name] = value;
+            } catch {
+              // Si non, on garde la valeur brute
+              entityData.attributes[attr.name] = attr.value;
+            }
+          });
+
+          // Si l'entité a un attribut `position`, on s'assure de l'inclure correctement
+          const position = entity.getAttribute("position");
+          if (position) {
+            entityData.attributes.position = position;
+          }
+
+          entities.push(entityData);
+        });
+
+        scenesData.push({
+          id: sceneId,
+          entities: entities,
+        });
+      });
+
+      // Convertit en JSON et déclenche le téléchargement
+      const scenesJson = JSON.stringify(scenesData, null, 2);
+      const blob = new Blob([scenesJson], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "scenes.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+  </script>
+</body>
+
 </html>

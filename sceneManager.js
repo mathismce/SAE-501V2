@@ -106,53 +106,75 @@ export async function saveAllScenes() {
     scene => scene.getAttribute("id") !== "defaultScene"
   );
   const scenesData = [];
+
   for (const scene of allScenes) {
     const sceneId = scene.getAttribute("id");
     const skyElement = scene.querySelector("a-sky");
     let skySrc = "";
-    // Vérifie et télécharge l'image de l'a-sky
+
+    // Gestion de l'élément `a-sky` et téléchargement de l'image de fond
     if (skyElement) {
       const skyUrl = skyElement.getAttribute("src");
-      skySrc = skyUrl ? `assets/${extractFileName(skyUrl)}` : "";
-      if (skyUrl) await downloadAndAddToZip(zip, skyUrl, skySrc);
-    }
-    const entities = [];
-    scene.querySelectorAll("a-entity, a-image, a-sphere, a-sky").forEach(entity => {
-      const isController =
-        entity.hasAttribute("laser-controls") ||
-        entity.hasAttribute("hp-mixed-reality-controls") ||
-        entity.getAttribute("id") === "camera-scene-1" ||
-        entity.getAttribute("id") === "leftHand";
-      if (!isController) {
-        const entityData = {
-          tagName: entity.tagName,
-          attributes: {},
-        };
-        Array.from(entity.attributes).forEach(attr => {
-          let value = attr.value;
-          console.log(value);
-
-          // Vérifie les attributs `src` pour les images et ajoute au zip
-          if (attr.name === "src" && value.startsWith("data:image")) {
-            const imagePath = `assets/${extractFileName(value)}`;
-            value = imagePath;
-            downloadAndAddToZip(zip, value, imagePath);
-          }
-          if (attr.name === "src") {
-            entityData.attributes[attr.name] = skySrc;
-          }
-          
-          });
-
-        // Si l'entité est un a-sky, met à jour son attribut src
-        if (entity.tagName === "a-sky" && skySrc) {
-          entityData.attributes["src"] = skySrc;
-        }
-
-        entities.push(entityData);
+      if (skyUrl) {
+        skySrc = `assets/${extractFileName(skyUrl)}`;
+        await downloadAndAddToZip(zip, skyUrl, skySrc);
       }
-    });
+    }
 
+    const entities = [];
+    // Boucle `for...of` pour gérer les entités de manière asynchrone
+    for (const entity of scene.querySelectorAll("a-entity, a-image, a-sphere, a-sky, a-box, a-text, a-plane")) {
+      const entityData = {
+        tagName: entity.tagName,
+        attributes: {},
+      };
+
+      // Extraction des attributs de l'entité
+      Array.from(entity.attributes).forEach(attr => {
+        try {
+          // Tente de parser l'attribut comme JSON si complexe
+          const value = JSON.parse(attr.value);
+          entityData.attributes[attr.name] = value;
+        } catch {
+          // Sinon, enregistre la valeur brute
+          entityData.attributes[attr.name] = attr.name === "src" && entity.tagName === "A-SKY" ? skySrc : attr.value;
+        }
+      });
+
+      // Si l'entité est une image, gérer le téléchargement de l'image
+      if (entity.tagName === "A-IMAGE") {
+        const imageUrl = entity.getAttribute("src");
+        if (imageUrl) {
+          const imageSrc = `assets/${extractFileName(imageUrl)}`;
+          await downloadAndAddToZip(zip, imageUrl, imageSrc); // Télécharge l'image et l'ajoute au zip
+          entityData.attributes.src = imageSrc; // Met à jour le `src` dans les données exportées
+        }
+      }
+
+      // Extraction de la position de l'entité
+      const position = entity.getAttribute("position");
+      if (position) {
+        entityData.attributes.position = position;
+      }
+
+      // Vérifie si l'entité a un attribut `data-tag-id` et si une sphère correspond
+      const tagId = entity.getAttribute("data-tag-id");
+      if (tagId) {
+        const sphere = scene.querySelector(`a-sphere[data-tag-id="${tagId}"]`);
+        if (sphere) {
+          const spherePosition = sphere.getAttribute("position");
+          if (spherePosition) {
+            // Applique la position de la sphère à l'entité correspondante
+            const updatedPosition = applySpherePositionToInfoboxElements(position, spherePosition);
+            entityData.attributes.position = updatedPosition;
+          }
+        }
+      }
+
+      entities.push(entityData);
+    }
+
+    // Ajout des données de la scène
     scenesData.push({
       id: sceneId,
       entities: entities,
@@ -162,7 +184,8 @@ export async function saveAllScenes() {
   // Ajoute le fichier JSON des scènes dans le ZIP
   const scenesJson = JSON.stringify(scenesData, null, 2);
   zip.file("scenes.json", scenesJson);
-  // Génére et télécharge le fichier ZIP
+
+  // Génère et télécharge le fichier ZIP
   zip.generateAsync({ type: "blob" }).then(blob => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -172,6 +195,31 @@ export async function saveAllScenes() {
     URL.revokeObjectURL(url);
   });
 }
+
+
+
+// Fonction pour appliquer la position de la sphère aux éléments avec `data-tag-id`
+
+// Fonction pour appliquer la position de la sphère aux éléments avec `data-tag-id`
+function applySpherePositionToInfoboxElements(entityPosition, spherePosition) {
+  // Vérifie que spherePosition est bien un objet avec les propriétés x, y, z
+  const sphereX = spherePosition.x || 0;
+  const sphereY = spherePosition.y || 0;
+  const sphereZ = spherePosition.z || 0;
+
+  // Applique la position relative de la sphère aux éléments
+  const updatedX = entityPosition.x + sphereX;
+  const updatedY = entityPosition.y + sphereY;
+  const updatedZ = entityPosition.z + sphereZ;
+
+  // Retourne la nouvelle position sous forme d'objet
+  return {
+    x: updatedX,
+    y: updatedY,
+    z: updatedZ
+  };
+}
+
 
 // Fonction pour extraire le nom de fichier
 function extractFileName(src) {

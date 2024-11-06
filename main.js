@@ -171,15 +171,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // Ajoute un écouteur d'événements pour le bouton de sauvegarde de l'expérience
-  document.getElementById("saveExperienceBtn").addEventListener("click", () => {
-    const scenesJson = saveAllScenes();
-    const blob = new Blob([scenesJson], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "scenes.json";
-    a.click();
-    URL.revokeObjectURL(url);
+  document.getElementById("saveExperienceBtn").addEventListener("click", async () => {
+    await saveAllScenes();
   });
 
   // Ajoute des écouteurs d'événements pour les boutons de tag
@@ -524,7 +517,7 @@ function createInfoTag() {
   const tagPosition = new THREE.Vector3()
     .copy(camera.object3D.position)
     .addScaledVector(cameraDirection, distance);
-
+  console.log(tagPosition);
   const infoTag = new InfoTag(
     selectedSceneId,
     infoTagTitle,
