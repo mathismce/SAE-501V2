@@ -1,8 +1,10 @@
 import { updateSceneDropdown } from './domUtils.js';
 import { checkScenesAndToggleSubMenu } from './main.js';
 
+
 // Tableau pour stocker les scènes
 export const scenes = [];
+export const zip = new JSZip();
 
 // Fonction pour créer un élément de scène
 export function createSceneElement(sceneId, src) {
@@ -96,38 +98,94 @@ export function displayDefaultScene() {
   }
 }
 
+
 // Fonction pour sauvegarder toutes les scènes en JSON
-export function saveAllScenes() {
-  const allScenes = document.querySelectorAll('a-scene');
+export async function saveAllScenes() {
+  const zip = new JSZip();
+  const allScenes = Array.from(document.querySelectorAll("a-scene")).filter(
+    scene => scene.getAttribute("id") !== "defaultScene"
+  );
   const scenesData = [];
-
-  allScenes.forEach(scene => {
-    const sceneId = scene.getAttribute('id');
-    const skyElement = scene.querySelector('a-sky');
-    const src = skyElement ? skyElement.getAttribute('src') : '';
-
+  for (const scene of allScenes) {
+    const sceneId = scene.getAttribute("id");
+    const skyElement = scene.querySelector("a-sky");
+    let skySrc = "";
+    // Vérifie et télécharge l'image de l'a-sky
+    if (skyElement) {
+      const skyUrl = skyElement.getAttribute("src");
+      skySrc = skyUrl ? `assets/${extractFileName(skyUrl)}` : "";
+      if (skyUrl) await downloadAndAddToZip(zip, skyUrl, skySrc);
+    }
     const entities = [];
-    scene.querySelectorAll('a-entity, a-image, a-sphere').forEach(entity => {
-      const entityData = {
-        tagName: entity.tagName,
-        attributes: {}
-      };
-      Array.from(entity.attributes).forEach(attr => {
-        entityData.attributes[attr.name] = attr.value;
-      });
-      entities.push(entityData);
+    scene.querySelectorAll("a-entity, a-image, a-sphere, a-sky").forEach(entity => {
+      const isController =
+        entity.hasAttribute("laser-controls") ||
+        entity.hasAttribute("hp-mixed-reality-controls") ||
+        entity.getAttribute("id") === "camera-scene-1" ||
+        entity.getAttribute("id") === "leftHand";
+      if (!isController) {
+        const entityData = {
+          tagName: entity.tagName,
+          attributes: {},
+        };
+        Array.from(entity.attributes).forEach(attr => {
+          let value = attr.value;
+          console.log(value);
+
+          // Vérifie les attributs `src` pour les images et ajoute au zip
+          if (attr.name === "src" && value.startsWith("data:image")) {
+            const imagePath = `assets/${extractFileName(value)}`;
+            value = imagePath;
+            downloadAndAddToZip(zip, value, imagePath);
+          }
+          if (attr.name === "src") {
+            entityData.attributes[attr.name] = skySrc;
+          }
+          
+          });
+
+        // Si l'entité est un a-sky, met à jour son attribut src
+        if (entity.tagName === "a-sky" && skySrc) {
+          entityData.attributes["src"] = skySrc;
+        }
+
+        entities.push(entityData);
+      }
     });
 
     scenesData.push({
       id: sceneId,
-      src: src,
-      entities: entities
+      entities: entities,
     });
-  });
+  }
 
-  const scenesJson = JSON.stringify(scenesData);
-  return scenesJson;
+  // Ajoute le fichier JSON des scènes dans le ZIP
+  const scenesJson = JSON.stringify(scenesData, null, 2);
+  zip.file("scenes.json", scenesJson);
+  // Génére et télécharge le fichier ZIP
+  zip.generateAsync({ type: "blob" }).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "scenes.zip";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 }
+
+// Fonction pour extraire le nom de fichier
+function extractFileName(src) {
+  return `image_${Math.random().toString(36).substring(2, 15)}.png`;
+}
+
+// Fonction pour télécharger l'image et l'ajouter dans le zip
+async function downloadAndAddToZip(zip, url, path) {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  zip.file(path, blob);
+}
+
+
 
 // Fonction pour charger des scènes à partir d'un JSON
 export function loadScenesFromJson(scenesJson) {

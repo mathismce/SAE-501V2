@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
-          const scenesJson = e.target.result;
+          const scenesJson = JSON.parse(e.target.result); // Parse le texte en JSON
           loadScenesFromJson(scenesJson);
         };
         reader.readAsText(file);
