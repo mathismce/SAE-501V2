@@ -1,6 +1,2 @@
-Pour lancer le projet : 
-
-npm run watch
-
-Adressa Page Github
-https://maelc-mlk.github.io/SAE501/
+Lien vers l'app hébergé : 
+https://www.m-micheau.mmi-limoges.fr/app/
