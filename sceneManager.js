@@ -123,7 +123,7 @@ export async function saveAllScenes() {
 
     const entities = [];
     // Boucle `for...of` pour gérer les entités de manière asynchrone
-    for (const entity of scene.querySelectorAll("a-entity, a-image, a-sphere, a-sky, a-box, a-text, a-plane")) {
+    for (const entity of scene.querySelectorAll("a-entity, a-image, a-video, a-sphere, a-sky, a-box, a-text, a-plane")) {
       const entityData = {
         tagName: entity.tagName,
         attributes: {},
@@ -141,13 +141,22 @@ export async function saveAllScenes() {
         }
       });
 
-      // Si l'entité est une image, gérer le téléchargement de l'image
+      // téléchargement de l'image
       if (entity.tagName === "A-IMAGE") {
         const imageUrl = entity.getAttribute("src");
         if (imageUrl) {
           const imageSrc = `assets/${extractFileName(imageUrl)}`;
-          await downloadAndAddToZip(zip, imageUrl, imageSrc); // Télécharge l'image et l'ajoute au zip
+          await downloadAndAddToZip(zip, imageUrl, imageSrc);
           entityData.attributes.src = imageSrc; // Met à jour le `src` dans les données exportées
+        }
+      }
+
+      if (entity.tagName === "A-VIDEO") {
+        const videoUrl = entity.getAttribute("src");
+        if (videoUrl) {
+          const videoSrc = `assets/${extractFileNameVideo(videoUrl)}`;
+          await downloadAndAddToZip(zip, videoUrl, videoSrc);
+          entityData.attributes.src = videoSrc;
         }
       }
 
@@ -185,6 +194,54 @@ export async function saveAllScenes() {
   const scenesJson = JSON.stringify(scenesData, null, 2);
   zip.file("scenes.json", scenesJson);
 
+  const indexHtmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scène 3D</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene id="scene">
+        <a-camera id="camera-scene"></a-camera>
+    </a-scene>
+    <script>
+        AFRAME.registerComponent('look-at-camera', {
+            tick: function () {
+                var camera = document.getElementById('camera-scene');
+                var cameraPosition = camera.object3D.position;
+                this.el.object3D.lookAt(cameraPosition);
+            }
+        });
+
+        function loadSceneFromJSON(url) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const scene = document.getElementById('scene');
+                    data.forEach(entityGroup => {
+                        entityGroup.entities.forEach(subEntity => {
+                            const el = document.createElement(subEntity.tagName);
+                            Object.keys(subEntity.attributes).forEach(attr => {
+                                el.setAttribute(attr, subEntity.attributes[attr]);
+                            });
+                            scene.appendChild(el);
+                        });
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement du fichier JSON:', error));
+        }
+
+        loadSceneFromJSON('scenes.json');
+    </script>
+</body>
+</html>
+`;
+  // Ajout de l'index.html au ZIP
+  zip.file("index.html", indexHtmlContent);
+  
   // Génère et télécharge le fichier ZIP
   zip.generateAsync({ type: "blob" }).then(blob => {
     const url = URL.createObjectURL(blob);
@@ -197,8 +254,6 @@ export async function saveAllScenes() {
 }
 
 
-
-// Fonction pour appliquer la position de la sphère aux éléments avec `data-tag-id`
 
 // Fonction pour appliquer la position de la sphère aux éléments avec `data-tag-id`
 function applySpherePositionToInfoboxElements(entityPosition, spherePosition) {
@@ -224,6 +279,10 @@ function applySpherePositionToInfoboxElements(entityPosition, spherePosition) {
 // Fonction pour extraire le nom de fichier
 function extractFileName(src) {
   return `image_${Math.random().toString(36).substring(2, 15)}.png`;
+}
+
+function extractFileNameVideo(src) {
+  return `video_${Math.random().toString(36).substring(2, 15)}.mp4`;
 }
 
 // Fonction pour télécharger l'image et l'ajouter dans le zip

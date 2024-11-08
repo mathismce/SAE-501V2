@@ -1,0 +1,126 @@
+[
+  {
+    "id": "scene-1",
+    "entities": [
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "camera": "",
+          "wasd-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": "",
+          "look-controls": "",
+          "id": "camera-scene-1"
+        }
+      },
+      {
+        "tagName": "A-SKY",
+        "attributes": {
+          "src": "scene//assets/image_rn13vw2xhy.png",
+          "style": "transform: scaleX(-1);",
+          "material": "",
+          "geometry": "",
+          "scale": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-SPHERE",
+        "attributes": {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": -4
+          },
+          "radius": 0.02,
+          "color": "#FFFFFF",
+          "follow-camera": "",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "id": "leftHand",
+          "laser-controls": "",
+          "super-hands": "",
+          "raycaster": "",
+          "hp-mixed-reality-controls": "",
+          "magicleap-controls": "",
+          "oculus-go-controls": "",
+          "oculus-touch-controls": "",
+          "pico-controls": "",
+          "valve-index-controls": "",
+          "vive-controls": "",
+          "vive-focus-controls": "",
+          "windows-motion-controls": "",
+          "generic-tracked-controller-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "id": "rightHand",
+          "laser-controls": "",
+          "super-hands": "",
+          "raycaster": "",
+          "hp-mixed-reality-controls": "",
+          "magicleap-controls": "",
+          "oculus-go-controls": "",
+          "oculus-touch-controls": "",
+          "pico-controls": "",
+          "valve-index-controls": "",
+          "vive-controls": "",
+          "vive-focus-controls": "",
+          "windows-motion-controls": "",
+          "generic-tracked-controller-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "data-aframe-default-light": "",
+          "aframe-injected": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "position": {
+            "x": -0.5,
+            "y": 1,
+            "z": 1
+          },
+          "data-aframe-default-light": "",
+          "aframe-injected": ""
+        }
+      }
+    ]
+  }
+]

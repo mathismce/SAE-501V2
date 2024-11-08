@@ -1,0 +1,38 @@
+{
+    "type": "Scene",
+    "entities": [
+      {
+        "type": "a-box",
+        "position": "0 1 -5",
+        "rotation": "0 45 0",
+        "scale": "1 1 1",
+        "color": "#4CC3D9"
+      },
+      {
+        "type": "a-sphere",
+        "position": "2 1 -5",
+        "radius": "1",
+        "color": "#EF2D5E"
+      },
+      {
+        "type": "a-cylinder",
+        "position": "-2 1 -5",
+        "radius": "0.5",
+        "height": "2",
+        "color": "#FFC65D"
+      },
+      {
+        "type": "a-plane",
+        "position": "0 0 -5",
+        "rotation": "-90 0 0",
+        "width": "4",
+        "height": "4",
+        "color": "#7BC8A4"
+      },
+      {
+        "type": "a-sky",
+        "color": "#ECECEC"
+      }
+    ]
+  }
+  

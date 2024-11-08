@@ -1,0 +1,46 @@
+[
+  {
+    "id": "scene-1",
+    "src": "asset/GS__3526.jpg",
+    "entities": [
+      {
+        "tagName": "A-SKY",
+        "attributes": {
+          "src": "asset/GS__3526.jpg",
+          "style": "transform: scaleX(-1);",
+          "material": "",
+          "geometry": "",
+          "scale": ""
+        }
+      },
+      {
+        "tagName": "A-SPHERE",
+        "attributes": {
+          "position": "",
+          "radius": "0.02",
+          "color": "#FFFFFF",
+          "follow-camera": "",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "data-aframe-default-light": "",
+          "aframe-injected": ""
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "position": "",
+          "data-aframe-default-light": "",
+          "aframe-injected": ""
+        }
+      }
+    ]
+  }
+]

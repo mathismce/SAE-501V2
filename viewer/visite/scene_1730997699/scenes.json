@@ -1,0 +1,252 @@
+[
+  {
+    "id": "scene-1",
+    "entities": [
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "camera": "",
+          "wasd-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "rotation": "",
+          "look-controls": "",
+          "id": "camera-scene-1"
+        }
+      },
+      {
+        "tagName": "A-SKY",
+        "attributes": {
+          "src": "assets/image_g9njpdn3m9v.png",
+          "style": "transform: scaleX(-1);",
+          "material": "",
+          "geometry": "",
+          "scale": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-SPHERE",
+        "attributes": {
+          "position": {
+            "x": -0.7607253539652131,
+            "y": -0.32763254489349847,
+            "z": -3.9133047225281494
+          },
+          "radius": 0.02,
+          "color": "#FFFFFF",
+          "follow-camera": "",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "id": "leftHand",
+          "laser-controls": "",
+          "super-hands": "",
+          "raycaster": "",
+          "hp-mixed-reality-controls": "",
+          "magicleap-controls": "",
+          "oculus-go-controls": "",
+          "oculus-touch-controls": "",
+          "pico-controls": "",
+          "valve-index-controls": "",
+          "vive-controls": "",
+          "vive-focus-controls": "",
+          "windows-motion-controls": "",
+          "generic-tracked-controller-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "id": "rightHand",
+          "laser-controls": "",
+          "super-hands": "",
+          "raycaster": "",
+          "hp-mixed-reality-controls": "",
+          "magicleap-controls": "",
+          "oculus-go-controls": "",
+          "oculus-touch-controls": "",
+          "pico-controls": "",
+          "valve-index-controls": "",
+          "vive-controls": "",
+          "vive-focus-controls": "",
+          "windows-motion-controls": "",
+          "generic-tracked-controller-controls": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "data-aframe-default-light": "",
+          "aframe-injected": "",
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "light": "",
+          "position": {
+            "x": -0.5,
+            "y": 1,
+            "z": 1
+          },
+          "data-aframe-default-light": "",
+          "aframe-injected": ""
+        }
+      },
+      {
+        "tagName": "A-IMAGE",
+        "attributes": {
+          "id": "image-1730997666828",
+          "src": "assets/image_4j80vc0awmn.png",
+          "position": {
+            "x": -1.47940174759891,
+            "y": 0.4450858273266908,
+            "z": -2.6876140116308016
+          },
+          "width": 2,
+          "height": 2,
+          "track-cursor": "",
+          "dragndrop": "",
+          "look-at-camera": "",
+          "data-tag-id": 1730997666828,
+          "class": "tag",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-SPHERE",
+        "attributes": {
+          "id": "sphere-1730997674374",
+          "position": {
+            "x": 2.879845169645306,
+            "y": 5.489698126888445,
+            "z": -17.11168332673639
+          },
+          "radius": 0.35,
+          "color": "#EF2D5E",
+          "track-cursor": "",
+          "dragndrop": "",
+          "look-at-camera": "",
+          "data-tag-id": 1730997674374,
+          "class": "tag selected",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-BOX",
+        "attributes": {
+          "position": {
+            "x": 1.839922584822653,
+            "y": 3.1448490634442225,
+            "z": -8.555841663368195
+          },
+          "depth": 0.5,
+          "height": 0.5,
+          "width": 0.5,
+          "data-tag-id": 1730997674374,
+          "color": "#EF2D5E",
+          "resize-on-click": "",
+          "material": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-ENTITY",
+        "attributes": {
+          "id": "infoBox-1730997674374",
+          "position": {
+            "x": 1.439922584822653,
+            "y": 2.7448490634442226,
+            "z": -8.555841663368195
+          },
+          "follow-mover": "",
+          "look-at-camera": ""
+        }
+      },
+      {
+        "tagName": "A-PLANE",
+        "attributes": {
+          "width": 5,
+          "height": 3,
+          "color": "#000000",
+          "material": "",
+          "position": {
+            "x": 3.9399225848226527,
+            "y": 1.2448490634442226,
+            "z": -8.505841663368194
+          },
+          "data-tag-id": 1730997674374,
+          "look-at-camera": "",
+          "geometry": ""
+        }
+      },
+      {
+        "tagName": "A-TEXT",
+        "attributes": {
+          "value": "aaaaaaaaa",
+          "position": {
+            "x": 3.9399225848226527,
+            "y": 2.2448490634442226,
+            "z": -8.455841663368195
+          },
+          "width": 4.5,
+          "scale": "",
+          "align": "center",
+          "color": "#EF2D5E",
+          "font": "https://cdn.aframe.io/fonts/mozillavr.fnt",
+          "data-tag-id": 1730997674374,
+          "look-at-camera": "",
+          "text": ""
+        }
+      },
+      {
+        "tagName": "A-TEXT",
+        "attributes": {
+          "value": "aaaaaaaaaaaaa",
+          "position": {
+            "x": 3.9399225848226527,
+            "y": 0.9448490634442226,
+            "z": -8.455841663368195
+          },
+          "scale": "",
+          "width": 2.4,
+          "align": "center",
+          "color": "#FFFFFF",
+          "data-tag-id": 1730997674374,
+          "look-at-camera": "",
+          "text": ""
+        }
+      }
+    ]
+  }
+]

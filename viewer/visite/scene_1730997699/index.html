@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scène 3D</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene id="scene">
+        <a-camera id="camera-scene"></a-camera>
+    </a-scene>
+    <script>
+        AFRAME.registerComponent('look-at-camera', {
+            tick: function () {
+                var camera = document.getElementById('camera-scene');
+                var cameraPosition = camera.object3D.position;
+                this.el.object3D.lookAt(cameraPosition);
+            }
+        });
+
+        function loadSceneFromJSON(url) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const scene = document.getElementById('scene');
+                    data.forEach(entityGroup => {
+                        entityGroup.entities.forEach(subEntity => {
+                            const el = document.createElement(subEntity.tagName);
+                            Object.keys(subEntity.attributes).forEach(attr => {
+                                el.setAttribute(attr, subEntity.attributes[attr]);
+                            });
+                            scene.appendChild(el);
+                        });
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement du fichier JSON:', error));
+        }
+
+        loadSceneFromJSON('scenes.json');
+    </script>
+</body>
+</html>
